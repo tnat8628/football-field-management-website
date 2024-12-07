@@ -1,6 +1,7 @@
-package vn.iostar.controller.Admin;
+package vn.iostar.controller.admin;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,7 +19,6 @@ import org.springframework.web.servlet.ModelAndView;
 import jakarta.validation.Valid;
 import vn.iostar.entity.Category;
 import vn.iostar.model.CategoryModel;
-import vn.iostar.repository.CategoryRepository;
 import vn.iostar.services.CategoryService;
 
 @Controller
@@ -27,7 +28,7 @@ public class CategoryController {
 	@Autowired
 	CategoryService categoryService;
 	
-	@GetMapping("")
+	@RequestMapping("")
 	public String all(Model model) {
 		List<Category> list = categoryService.findAll();
 		model.addAttribute("list", list);
@@ -43,24 +44,53 @@ public class CategoryController {
 	}
 	
 	@PostMapping("/save")
-	public ModelAndView saveOrUpdate(ModelMap model, @Valid @ModelAttribute("category") CategoryModel categoryModel, BindingResult result) {
-		if(result.hasErrors()) {
-			return new ModelAndView("admin/categories/add");
+	public ModelAndView save(ModelMap model, @Valid @ModelAttribute("category") CategoryModel categoryModel, BindingResult result) {
+		if (result.hasErrors()) {
+	        // Nếu có lỗi validation, quay lại trang thêm/sửa với thông báo lỗi
+	        model.addAttribute("category", categoryModel);
+	        return new ModelAndView("admin/categories/add");
+	    }
+		// Chuyển đổi dữ liệu từ CategoryModel sang Entity Category
+	    Category entity = new Category();
+	    
+	    BeanUtils.copyProperties(categoryModel, entity);
+
+	    categoryService.save(entity);
+	    
+	    String message = "";
+	    if(categoryModel.getIsEdit() == true) {
+	    	message = "Category updated successfully!";
+	    } else {
+	    	message = "Category added successfully!";
+	    }
+		model.addAttribute("message", message);
+		return new ModelAndView("forward:/admin/categories", model);
+	}
+	
+	@GetMapping("edit/{id}")
+	public ModelAndView edit(ModelMap model, @PathVariable("id") Long id) {
+		Optional<Category> optCategory = categoryService.findById(id);
+		CategoryModel categoryModel = new CategoryModel();
+		
+		//kiểm tra sự tồn tại của Category
+		if(optCategory.isPresent()) {
+			Category entity = optCategory.get();
+			//copy từ entity sang Model
+			BeanUtils.copyProperties(entity, categoryModel);
+			categoryModel.setIsEdit(true);
+			//đẩy dữ liệu ra view
+			model.addAttribute("category", categoryModel);
+			
+			return new ModelAndView("admin/categories/add", model);
 		}
-		Category entity = new Category();
-		//copy từ Model sang Entity
-		BeanUtils.copyProperties(categoryModel, entity);
-		//gọi hàm save trong service
-		categoryService.save(entity);
-		//đưa thông báo về cho biến message
-		String mess = "";
-		if(categoryModel.getIsEdit() == true) {
-			mess = "Category is Edited!!!";
-		} else {
-			mess = "Category is Saved!!!";
-		}
-		model.addAttribute("mess", mess);
-		//redirect vể URL controller
+		model.addAttribute("message", "Category does not exist!!!");
+		return new ModelAndView("forward:/admin/categories", model);
+	}
+	
+	@GetMapping("delete/{id}")
+	public ModelAndView delete(ModelMap model, @PathVariable("id") Long id) {
+		categoryService.deleteById(id);
+		model.addAttribute("message", "Category deleted successfully!");
 		return new ModelAndView("forward:/admin/categories", model);
 	}
 }

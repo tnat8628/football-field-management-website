@@ -11,9 +11,9 @@
     <div class="container mt-4">
         <h1 class="mb-4">List of Categories</h1>
 		<!-- Display the message if available -->
-	        <c:if test="${not empty mess}">
+	        <c:if test="${not empty message}">
 	            <div class="alert alert-info">
-	                ${mess}
+	                ${message}
 	            </div>
 	        </c:if>
         <!-- Table to display categories -->
