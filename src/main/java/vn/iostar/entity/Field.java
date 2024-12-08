@@ -38,7 +38,7 @@ public class Field implements Serializable {
 	private Category category;
 	
 	@Column(name = "IsActive")
-	private boolean isActive;
+	private Boolean isActive;
 	
 	@OneToMany(mappedBy = "field")
     private List<Booking> bookings;

@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,33 +28,34 @@
 </head>
 <body>
     <div class="container mt-4">
+    	<!-- Form Tìm kiếm -->
+	    <!-- Form Tìm kiếm -->
+	    <div class="my-4">
+	        <input type="text" id="searchResults" class="form-control" placeholder="Nhập tên loại sân để tìm kiếm..."
+	               value="${keyword != null ? keyword : ''}">
+	    </div>
         <!-- Hình sân cỏ -->
         <div class="text-center">
             <img src="<%= request.getContextPath() %>/images/field.jpeg" alt="Football Field" class="field-image">
         </div>
 
         <!-- Lựa chọn loại sân -->
+        <div class="container mt-4">
+        <h2 class="text-center">Chọn Loại Sân</h2>
         <div class="row text-center mt-4">
-            <h2>Choose Your Field</h2>
-            <%
-                String[][] fields = {
-                    {"5x5 Field", "field-5x5.jpg", "5x5"},
-                    {"7x7 Field", "field-7x7.jpg", "7x7"},
-                    {"11x11 Field", "field-11x11.jpg", "11x11"}
-                };
-                for (String[] field : fields) {
-            %>
-            <div class="col-md-4 mt-3">
-                <div class="card choice-card">
-                    <img src="<%= request.getContextPath() %>/images/<%= field[1] %>" alt="<%= field[0] %>" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title"><%= field[0] %></h5>
-                        <a href="<%= request.getContextPath() %>/book?field=<%= field[2] %>" class="btn btn-primary">Select</a>
+            <c:forEach var="category" items="${categories}">
+                <div class="col-md-4 mt-3">
+                    <div class="card choice-card">
+                        
+                        <div class="card-body">
+                            <h5 class="card-title">${category.categoryName}</h5>
+                            <a href="<c:url value='/fields/${category.categoryId}'/>" class="btn btn-primary">Chọn</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <% } %>
+            </c:forEach>
         </div>
+    </div>
 
         <!-- Tin tức bóng đá -->
         <div class="mt-5">
@@ -78,5 +80,8 @@
 
     <!-- Link Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<script src="<c:url value='/js/search.js'/>"></script>
+    
 </body>
 </html>

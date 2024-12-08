@@ -5,7 +5,7 @@
         <nav>
             <ul class="nav">
                 <li class="nav-item">
-                    <a href="/admin/dashboard" class="nav-link text-light">Dashboard</a>
+                    <a href="/admin" class="nav-link text-light">Dashboard</a>
                 </li>
                 <li class="nav-item">
                     <a href="/admin/settings" class="nav-link text-light">Settings</a>

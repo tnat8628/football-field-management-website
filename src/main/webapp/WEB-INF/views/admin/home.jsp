@@ -51,7 +51,7 @@
                 <div class="card statistics-card">
                     <div class="card-body">
                         <h5 class="card-title">Total Football Fields</h5>
-                        <p class="card-text">15</p>
+                        <p class="card-text">${totalField}</p>
                     </div>
                 </div>
             </div>
@@ -81,7 +81,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Manage Football Fields</h5>
-                        <a href="<%= request.getContextPath() %>/manage-fields" class="btn btn-primary">Manage</a>
+                        <a href="/admin/fields" class="btn btn-primary">Manage</a>
                     </div>
                 </div>
             </div>
