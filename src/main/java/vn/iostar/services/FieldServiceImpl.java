@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import vn.iostar.entity.Category;
 import vn.iostar.entity.Field;
 import vn.iostar.repository.FieldRepository;
 
@@ -87,5 +88,8 @@ public class FieldServiceImpl implements FieldService{
 		fieldRepository.deleteById(id);
 	}
 	
-	
+	@Override
+    public List<Field> findByCategory(Category category) {
+        return fieldRepository.findByCategory(category);
+    }
 }

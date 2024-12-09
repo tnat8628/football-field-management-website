@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import vn.iostar.entity.Category;
 import vn.iostar.entity.Field;
 
 public interface FieldService {
@@ -38,5 +39,5 @@ public interface FieldService {
 
 	void deleteById(int id);
 	
-	
+	List<Field> findByCategory(Category category);
 }
